@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import LoadingSign from '../components/LoadingSign';
 import { AuthContext } from '../context/AuthContext';
-import config from '../config';
+import config from '../config/config';
 
 function EpisodeDetailsPage() {
   const { podcastId, episodeId } = useParams();

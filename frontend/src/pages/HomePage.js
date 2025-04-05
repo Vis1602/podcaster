@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import LoadingSign from "../components/LoadingSign";
 import { AuthContext } from "../context/AuthContext";
 import "../styles/HomePage.css";
+import config from '../config/config';
 
 function HomePage() {
   const [itunesPodcasts, setItunesPodcasts] = useState([]);
