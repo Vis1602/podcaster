@@ -23,14 +23,7 @@ function RegisterPage() {
             await axios.post(`${config.apiUrl}/api/auth/register`, { email, password });
             navigate('/login');
         } catch (err) {
-            console.error('Registration error:', err);
-            if (err.code === 'ECONNABORTED') {
-                setError('Request timed out. Please check your internet connection.');
-            } else if (err.code === 'ERR_NETWORK') {
-                setError('Network error. Please check if the server is running.');
-            } else {
-                setError(err.response?.data?.message || 'Registration failed. Please try again.');
-            }
+            setError(err.response?.data?.message || 'Registration failed. Please try again.');
         } finally {
             setLoading(false);
         }

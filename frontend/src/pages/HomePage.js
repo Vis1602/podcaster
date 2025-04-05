@@ -64,7 +64,7 @@ function HomePage() {
       
       // Fetch user-uploaded podcasts
       try {
-        const response = await fetch('http://localhost:5000/api/podcasts');
+        const response = await fetch(`${config.apiUrl}/api/podcasts`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

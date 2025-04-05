@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import LoadingSign from '../components/LoadingSign';
 import { AuthContext } from '../context/AuthContext';
+import config from '../config';
 
 function PodcastDetailsPage() {
   const { podcastId } = useParams();
@@ -22,7 +23,7 @@ function PodcastDetailsPage() {
       
       try {
         // First try to fetch as a user podcast
-        const response = await fetch(`http://localhost:5000/api/podcasts/${podcastId}`);
+        const response = await fetch(`${config.apiUrl}/api/podcasts/${podcastId}`);
         if (response.ok) {
           const data = await response.json();
           setPodcast(data);
@@ -65,7 +66,7 @@ function PodcastDetailsPage() {
     if (!window.confirm('Are you sure you want to delete this podcast?')) return;
     
     try {
-      const response = await fetch(`http://localhost:5000/api/podcasts/${podcastId}`, {
+      const response = await fetch(`${config.apiUrl}/api/podcasts/${podcastId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

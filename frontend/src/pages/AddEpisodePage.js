@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import { AuthContext } from '../context/AuthContext';
+import config from '../config';
 
 function AddEpisodePage() {
   const { podcastId } = useParams();
@@ -22,7 +23,7 @@ function AddEpisodePage() {
   useEffect(() => {
     const fetchPodcast = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/podcasts/${podcastId}`);
+        const response = await fetch(`${config.apiUrl}/api/podcasts/${podcastId}`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -77,7 +78,7 @@ function AddEpisodePage() {
     formData.append('audio', audioFile);
     
     try {
-      const response = await fetch('http://localhost:5000/api/upload/audio', {
+      const response = await fetch(`${config.apiUrl}/api/upload/audio`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -124,7 +125,7 @@ function AddEpisodePage() {
       }
       
       // Create the episode with the audio URL
-      const response = await fetch(`http://localhost:5000/api/podcasts/${podcastId}/episodes`, {
+      const response = await fetch(`${config.apiUrl}/api/podcasts/${podcastId}/episodes`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

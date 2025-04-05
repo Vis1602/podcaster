@@ -1,7 +1,6 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import { AuthContext } from '../context/AuthContext';
 import config from '../config/config';
 
 function LoginPage() {
@@ -10,39 +9,17 @@ function LoginPage() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const { login } = useContext(AuthContext);
 
     const handleLogin = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError('');
         try {
-            const response = await axios({
-                method: 'post',
-                url: `${config.apiUrl}/api/auth/login`,
-                data: { email, password },
-                timeout: 10000,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
-            });
-            
-            if (response.data && response.data.token) {
-                login(response.data.token);
-                navigate('/home');
-            } else {
-                setError('Invalid response from server');
-            }
+            const response = await axios.post(`${config.apiUrl}/api/auth/login`, { email, password });
+            localStorage.setItem('token', response.data.token);
+            navigate('/home');
         } catch (err) {
-            console.error('Login error:', err);
-            if (err.code === 'ECONNABORTED') {
-                setError('Request timed out. Please check your internet connection.');
-            } else if (err.code === 'ERR_NETWORK') {
-                setError('Network error. Please check if the server is running.');
-            } else {
-                setError(err.response?.data?.message || 'Login failed. Please try again.');
-            }
+            setError(err.response?.data?.message || 'Login failed. Please try again.');
         } finally {
             setLoading(false);
         }

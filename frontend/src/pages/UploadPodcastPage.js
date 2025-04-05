@@ -2,6 +2,7 @@ import React, { useState, useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import { AuthContext } from '../context/AuthContext';
+import config from '../config';
 
 function UploadPodcastPage() {
   const [title, setTitle] = useState('');
@@ -45,7 +46,7 @@ function UploadPodcastPage() {
           const imageFormData = new FormData();
           imageFormData.append('image', imageFile);
           
-          const imageUploadResponse = await fetch('http://localhost:5000/api/upload/image', {
+          const imageUploadResponse = await fetch(`${config.apiUrl}/api/upload/image`, {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${token}`
@@ -68,7 +69,7 @@ function UploadPodcastPage() {
       
       // Create the podcast
       try {
-        const response = await fetch('http://localhost:5000/api/podcasts', {
+        const response = await fetch(`${config.apiUrl}/api/podcasts`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
