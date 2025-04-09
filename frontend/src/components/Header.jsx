@@ -1,16 +1,22 @@
-import React, { useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useContext, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import '../styles/Header.css';
 
 function Header() {
     const { isAuthenticated, logout } = useContext(AuthContext);
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleLogout = () => {
         logout();
         navigate('/');
     };
+
+    // Don't show header on login and register pages
+    if (location.pathname === '/login' || location.pathname === '/register') {
+        return null;
+    }
 
     return (
         <header className="header">

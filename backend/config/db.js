@@ -1,16 +1,16 @@
 const mongoose = require('mongoose');
-const config = require('./config');
+require('dotenv').config();
 
 // MongoDB connection
 const connectDB = async () => {
     try {
-        await mongoose.connect(config.mongoURI, { 
+        await mongoose.connect(process.env.MONGO_URI, { 
             dbName: 'podcastDB'
         });
         console.log('Connected to MongoDB successfully');
     } catch (err) {
         console.error('MongoDB connection error:', err);
-        console.error('Connection string:', config.mongoURI.replace(/\/\/[^:]+:[^@]+@/, '//***:***@'));
+        console.error('Connection string:', process.env.MONGO_URI.replace(/\/\/[^:]+:[^@]+@/, '//***:***@'));
         process.exit(1);
     }
 };

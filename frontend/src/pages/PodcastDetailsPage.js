@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import LoadingSign from '../components/LoadingSign';
 import { AuthContext } from '../context/AuthContext';
-import config from '../config/config';
+import axios from 'axios';
 
 function PodcastDetailsPage() {
   const { podcastId } = useParams();
@@ -23,7 +23,7 @@ function PodcastDetailsPage() {
       
       try {
         // First try to fetch as a user podcast
-        const response = await fetch(`${config.apiUrl}/api/podcasts/${podcastId}`);
+        const response = await fetch(`http://localhost:5000/api/podcasts/${podcastId}`);
         if (response.ok) {
           const data = await response.json();
           setPodcast(data);
@@ -63,19 +63,12 @@ function PodcastDetailsPage() {
   const handleDeletePodcast = async () => {
     if (!isAuthenticated || !isUserPodcast) return;
     
-    if (!window.confirm('Are you sure you want to delete this podcast?')) return;
+    if (!window.confirm('Are you sure you want to delete this podcast? This action cannot be undone.')) return;
     
     try {
-      const response = await fetch(`${config.apiUrl}/api/podcasts/${podcastId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+      await axios.delete(`http://localhost:5000/api/podcasts/${podcastId}`, {
+        headers: { Authorization: `Bearer ${token}` }
       });
-      
-      if (!response.ok) {
-        throw new Error('Failed to delete podcast');
-      }
       
       navigate('/home');
     } catch (error) {
@@ -100,6 +93,11 @@ function PodcastDetailsPage() {
       return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  const handleImageError = (event) => {
+    console.error('Image failed to load:', event.target.src);
+    event.target.src = "/default-podcast-image.svg";
   };
 
   if (error) {
@@ -139,6 +137,7 @@ function PodcastDetailsPage() {
                 alt={isUserPodcast ? podcast.title : podcast.collectionName} 
                 className="w-full rounded-lg mb-4"
                 style={{ imageRendering: 'high-quality' }}
+                onError={handleImageError}
               />
               <h2 className="text-xl font-bold text-blue-400 mb-1">
                 {isUserPodcast ? podcast.title : podcast.collectionName}

@@ -145,19 +145,23 @@ router.put('/:id', verifyToken, async (req, res) => {
 router.delete('/:id', verifyToken, async (req, res) => {
     try {
         const podcast = await Podcast.findById(req.params.id);
+        
         if (!podcast) {
             return res.status(404).json({ message: 'Podcast not found' });
         }
-        
+
         // Check if the user is the owner of the podcast
         if (podcast.userId.toString() !== req.user.id) {
             return res.status(403).json({ message: 'Not authorized to delete this podcast' });
         }
-        
+
+        // Delete the podcast
         await Podcast.findByIdAndDelete(req.params.id);
+        
         res.json({ message: 'Podcast deleted successfully' });
-    } catch (err) {
-        res.status(500).json({ message: 'Server error', error: err.message });
+    } catch (error) {
+        console.error('Error deleting podcast:', error);
+        res.status(500).json({ message: 'Error deleting podcast' });
     }
 });
 

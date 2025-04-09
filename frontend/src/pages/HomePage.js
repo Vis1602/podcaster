@@ -4,7 +4,6 @@ import Header from "../components/Header";
 import LoadingSign from "../components/LoadingSign";
 import { AuthContext } from "../context/AuthContext";
 import "../styles/HomePage.css";
-import config from '../config/config';
 
 function HomePage() {
   const [itunesPodcasts, setItunesPodcasts] = useState([]);
@@ -65,7 +64,7 @@ function HomePage() {
       
       // Fetch user-uploaded podcasts
       try {
-        const response = await fetch(`${config.apiUrl}/api/podcasts`);
+        const response = await fetch(`http://localhost:5000/api/podcasts`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -94,7 +93,8 @@ function HomePage() {
   );
 
   const handleImageError = (event) => {
-    event.target.src = "/path/to/default-image.jpg";
+    console.error('Image failed to load:', event.target.src);
+    event.target.src = "/default-podcast-image.svg";
   };
 
   if (loading) {

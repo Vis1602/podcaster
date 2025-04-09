@@ -5,7 +5,12 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const rateLimit = require('express-rate-limit');
+const path = require('path');
 require('dotenv').config();
+
+// Import routes
+const podcastRoutes = require('./routes/podcasts');
+const uploadRoutes = require('./routes/uploads');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -14,6 +19,13 @@ const SECRET_KEY = process.env.SECRET_KEY;
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Routes
+app.use('/api/podcasts', podcastRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // Rate limiter
 const limiter = rateLimit({
@@ -37,7 +49,7 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model('User', userSchema);
 
 // Register route
-app.post('/api/register', async (req, res) => {
+app.post('/api/auth/register', async (req, res) => {
     const { email, password } = req.body;
 
     try {
@@ -57,7 +69,7 @@ app.post('/api/register', async (req, res) => {
 });
 
 // Login route
-app.post('/api/login', async (req, res) => {
+app.post('/api/auth/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {

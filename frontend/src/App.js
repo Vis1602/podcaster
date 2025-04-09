@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode'; 
+import { AuthProvider } from './context/AuthContext';
 import HomePage from './pages/HomePage';
 import PodcastDetailsPage from './pages/PodcastDetailsPage';
 import EpisodeDetailsPage from './pages/EpisodeDetailsPage';
@@ -8,6 +9,8 @@ import LoginPage from './pages/LoginPage';
 import LandingPage from './pages/LandingPage';
 import RegisterPage from './pages/RegisterPage';
 import AboutPage from './pages/AboutPage';
+import UploadPodcastPage from './pages/UploadPodcastPage';
+import AddEpisodePage from './pages/AddEpisodePage';
 
 function ProtectedRoute({ children }) {
     const token = localStorage.getItem('token');
@@ -33,21 +36,47 @@ function ProtectedRoute({ children }) {
 
 function App() {
     return (
-        <Router>
-            <Routes>
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
-                <Route path="/" element={<LandingPage />} />
-                <Route path="/home" element={
-                    <ProtectedRoute>
-                        <HomePage />
-                    </ProtectedRoute>
-                } />
-                <Route path="/podcast/:podcastId" element={<PodcastDetailsPage />} />
-                <Route path="/podcast/:podcastId/episode/:episodeId" element={<EpisodeDetailsPage />} />
-                <Route path="/about" element={<AboutPage />} />
-            </Routes>
-        </Router>
+        <AuthProvider>
+            <Router>
+                <Routes>
+                    {/* Public Routes */}
+                    <Route path="/" element={<LandingPage />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
+                    <Route path="/about" element={<AboutPage />} />
+                    
+                    {/* Protected Routes */}
+                    <Route path="/home" element={
+                        <ProtectedRoute>
+                            <HomePage />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/upload-podcast" element={
+                        <ProtectedRoute>
+                            <UploadPodcastPage />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/podcast/:podcastId" element={
+                        <ProtectedRoute>
+                            <PodcastDetailsPage />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/podcast/:podcastId/episode/:episodeId" element={
+                        <ProtectedRoute>
+                            <EpisodeDetailsPage />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="/podcast/:podcastId/add-episode" element={
+                        <ProtectedRoute>
+                            <AddEpisodePage />
+                        </ProtectedRoute>
+                    } />
+                    
+                    {/* Catch all route */}
+                    <Route path="*" element={<Navigate to="/" />} />
+                </Routes>
+            </Router>
+        </AuthProvider>
     );
 }
 

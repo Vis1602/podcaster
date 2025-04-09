@@ -15,7 +15,7 @@ router.post('/audio', verifyToken, upload.single('audio'), (req, res) => {
         }
         
         // Create file URL
-        const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+        const fileUrl = `http://localhost:${process.env.PORT || 5000}/uploads/${req.file.filename}`;
         
         res.json({
             message: 'File uploaded successfully',
@@ -37,7 +37,7 @@ router.post('/image', verifyToken, upload.single('image'), (req, res) => {
         }
         
         // Create file URL
-        const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+        const fileUrl = `http://localhost:${process.env.PORT || 5000}/uploads/${req.file.filename}`;
         
         res.json({
             message: 'Image uploaded successfully',

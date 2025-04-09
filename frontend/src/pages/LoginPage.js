@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import config from '../config/config';
+import { AuthContext } from '../context/AuthContext';
 
 function LoginPage() {
     const [email, setEmail] = useState('');
@@ -9,14 +9,15 @@ function LoginPage() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { login } = useContext(AuthContext);
 
     const handleLogin = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError('');
         try {
-            const response = await axios.post(`${config.apiUrl}/api/auth/login`, { email, password });
-            localStorage.setItem('token', response.data.token);
+            const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+            login(response.data.token);
             navigate('/home');
         } catch (err) {
             setError(err.response?.data?.message || 'Login failed. Please try again.');
